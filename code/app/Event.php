@@ -24,4 +24,30 @@ class Event extends Model
     {
         return '/events/' . $this->id;
     }
+
+    /**
+     * Return true if the interval between $startTime and $endTime
+     * Overwrite the event duration interval
+     *
+     * @param $startTime
+     * @param $endTime
+     * @return bool
+     */
+    public function checkOverwriteInterval($startTime, $endTime)
+    {
+        if ($startTime < $this->start_time) {
+            if ($endTime <= $this->start_time) {
+                return false;
+            }
+            return true;
+        }
+
+        if ($startTime > $this->start_time) {
+            if ($startTime >= $this->end_time) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

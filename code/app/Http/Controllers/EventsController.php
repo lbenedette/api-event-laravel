@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use Carbon\Carbon;
 
 class EventsController extends Controller
 {
@@ -55,6 +56,15 @@ class EventsController extends Controller
             'description' => 'required'
         ]);
 
+        $userEvents = auth()->user()->events;
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        foreach ($userEvents as $userEvent) {
+            if ($userEvent->checkOverwriteInterval($startTime, $endTime)) {
+                return response('The duration interval is invalid!', 400);
+            }
+        }
+
         $event = Event::create([
             'user_id' => auth()->id(),
             'start_time' => request('start_time'),
@@ -100,6 +110,15 @@ class EventsController extends Controller
             'end_time' => 'required|date_format:"Y-m-d H:i:s"',
             'description' => 'required'
         ]);
+
+        $userEvents = auth()->user()->events;
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        foreach ($userEvents as $userEvent) {
+            if ($userEvent->checkOverwriteInterval($startTime, $endTime)) {
+                return response('The duration interval is invalid!', 400);
+            }
+        }
 
         $event->update(request()->all());
 
