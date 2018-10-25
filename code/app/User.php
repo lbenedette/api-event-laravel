@@ -15,7 +15,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password'
     ];
 
     /**
@@ -27,7 +29,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function Events()
+    /**
+     * Fetch all events that were created by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function events()
     {
         return $this->hasMany(Event::class)->latest();
     }

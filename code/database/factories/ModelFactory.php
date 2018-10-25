@@ -22,3 +22,15 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Event::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => function() {
+            return factory(App\User::class)->create()->id;
+        },
+        'start_time' => $faker->dateTime(),
+        'end_time' => $faker->dateTime(),
+        'description' => $faker->realText(),
+    ];
+});

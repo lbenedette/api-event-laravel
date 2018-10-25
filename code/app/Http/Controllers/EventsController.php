@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Event;
-use Illuminate\Http\Request;
 
 class EventsController extends Controller
 {
@@ -50,9 +49,20 @@ class EventsController extends Controller
      */
     public function store()
     {
-        $this->eventHandle(new Event(), request());
+        $this->validate(request(), [
+            'start_time' => 'required|date_format:"Y-m-d H:i:s"|before:end_time',
+            'end_time' => 'required|date_format:"Y-m-d H:i:s"',
+            'description' => 'required'
+        ]);
 
-        return redirect('/events');
+        $event = Event::create([
+            'user_id' => auth()->id(),
+            'start_time' => request('start_time'),
+            'end_time' => request('end_time'),
+            'description' => request('description')
+        ]);
+
+        return redirect($event->path());
     }
 
     /**
@@ -85,9 +95,15 @@ class EventsController extends Controller
      */
     public function update(Event $event)
     {
-        $this->eventHandle($event, request());
+        $this->validate(request(), [
+            'start_time' => 'required|date_format:"Y-m-d H:i:s"|before:end_time',
+            'end_time' => 'required|date_format:"Y-m-d H:i:s"',
+            'description' => 'required'
+        ]);
 
-        return redirect('/events');
+        $event->update(request()->all());
+
+        return redirect($event->path());
     }
 
     /**
@@ -95,28 +111,12 @@ class EventsController extends Controller
      *
      * @param  \App\Event $event
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Event $event)
     {
         $event->delete();
 
         return redirect('/events');
-    }
-
-    private function eventHandle(Event $event, Request $request)
-    {
-        $this->validate($request, [
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'description' => 'required'
-        ]);
-
-        $event->description = $request->input('description');
-        $event->start_time = $request->input('start_time');
-        $event->end_time = $request->input('end_time');
-        $event->user_id = auth()->id();
-        $event->save();
-
-        return $event;
     }
 }
