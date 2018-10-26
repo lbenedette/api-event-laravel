@@ -20,6 +20,49 @@ class Event extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * A event have invites
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invites()
+    {
+        return $this->hasMany(EventInvite::class);
+    }
+
+    /**
+     * A event have invited users
+     *
+     * @return User|User[]|\Illuminate\Database\Eloquent\Collection|Model
+     */
+    public function invitedUsers()
+    {
+        $invitedUserIds = $this->invites()
+            ->where('confirmed', false)
+            ->pluck('user_id');
+
+        return User::find($invitedUserIds);
+    }
+
+    /**
+     * A event have confirmed users
+     *
+     * @return User|User[]|\Illuminate\Database\Eloquent\Collection|Model
+     */
+    public function confirmedUsers()
+    {
+        $confirmedUserIds = $this->invites()
+            ->where('confirmed', true)
+            ->pluck('user_id');
+
+        return User::find($confirmedUserIds);
+    }
+
+    /**
+     * Return the event resource url
+     *
+     * @return string
+     */
     public function path()
     {
         return '/events/' . $this->id;

@@ -20,3 +20,7 @@ Route::get('/events/{event}/edit', 'EventsController@edit');
 Route::get('/events/{event}', 'EventsController@show');
 Route::patch('/events/{event}', 'EventsController@update');
 Route::delete('/events/{event}', 'EventsController@destroy');
+
+Route::post('/events/{event}/invites', 'EventInvitesController@store');
+Route::patch('/invites/{invite}', 'EventInvitesController@confirm');
+Route::delete('/invites/{invite}', 'EventInvitesController@destroy');
