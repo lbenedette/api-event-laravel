@@ -29,8 +29,9 @@ $factory->define(App\Event::class, function (Faker\Generator $faker) {
         'user_id' => function() {
             return factory(App\User::class)->create()->id;
         },
-        'start_time' => $faker->dateTime(),
-        'end_time' => $faker->dateTime(),
-        'description' => $faker->realText(),
+        'start_time' => $faker->dateTime,
+        'end_time' => $faker->dateTime,
+        'title' => $faker->sentence(4),
+        'description' => $faker->realText(150)
     ];
 });

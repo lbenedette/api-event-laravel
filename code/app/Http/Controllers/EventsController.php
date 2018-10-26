@@ -51,24 +51,26 @@ class EventsController extends Controller
     public function store()
     {
         $this->validate(request(), [
-            'start_time' => 'required|date_format:"Y-m-d H:i:s"|before:end_time',
-            'end_time' => 'required|date_format:"Y-m-d H:i:s"',
-            'description' => 'required'
+            'start_at' => 'required|date_format:"Y-m-d H:i:s"|before:ends_at',
+            'ends_at' => 'required|date_format:"Y-m-d H:i:s"',
+            'title' => 'required|min:5'
         ]);
 
         $userEvents = auth()->user()->events;
-        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
-        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_at'));
+        $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', request('ends_at'));
         foreach ($userEvents as $userEvent) {
-            if ($userEvent->checkOverwriteInterval($startTime, $endTime)) {
-                return response('The duration interval is invalid!', 400);
+            if ($userEvent->checkOverwriteInterval($startDateTime, $endDateTime)) {
+                return redirect('/events/create')
+                    ->with('error', 'Already exist a event in this period!');
             }
         }
 
         $event = Event::create([
             'user_id' => auth()->id(),
-            'start_time' => request('start_time'),
-            'end_time' => request('end_time'),
+            'start_at' => request('start_at'),
+            'ends_at' => request('ends_at'),
+            'title' => request('title'),
             'description' => request('description')
         ]);
 
@@ -106,17 +108,22 @@ class EventsController extends Controller
     public function update(Event $event)
     {
         $this->validate(request(), [
-            'start_time' => 'required|date_format:"Y-m-d H:i:s"|before:end_time',
-            'end_time' => 'required|date_format:"Y-m-d H:i:s"',
-            'description' => 'required'
+            'start_at' => 'required|date_format:"Y-m-d H:i:s"|before:ends_at',
+            'ends_at' => 'required|date_format:"Y-m-d H:i:s"',
+            'title' => 'required|min:5'
         ]);
 
         $userEvents = auth()->user()->events;
-        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
-        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_time'));
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', request('start_at'));
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', request('ends_at'));
         foreach ($userEvents as $userEvent) {
+            if ($event->id == $userEvent->id) {
+                continue;
+            }
+
             if ($userEvent->checkOverwriteInterval($startTime, $endTime)) {
-                return response('The duration interval is invalid!', 400);
+                return redirect('/events/create')
+                    ->with('error', 'Already exist a event in this period!');
             }
         }
 

@@ -1,13 +1,24 @@
 {{ csrf_field() }}
 
+<div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+    <label for="title" class="col-md-4 control-label">Title</label>
+
+    <div class="col-md-6">
+        <input id="title" type="text" class="form-control" name="title" value="{{ $event->title }}" required>
+
+        @if ($errors->has('title'))
+            <span class="help-block">
+                <strong>{{ $errors->first('title') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
 <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
     <label for="description" class="col-md-4 control-label">Description</label>
 
     <div class="col-md-6">
-        <textarea id="description" class="form-control" name="description" rows="10"
-                  required autofocus>
-            {{ $event->description }}
-        </textarea>
+        <input id="description" type="text" class="form-control" name="description" value="{{ $event->description }}">
 
         @if ($errors->has('description'))
             <span class="help-block">
@@ -17,29 +28,29 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('start_time') ? ' has-error' : '' }}">
-    <label for="start_time" class="col-md-4 control-label">Start time</label>
+<div class="form-group{{ $errors->has('start_at') ? ' has-error' : '' }}">
+    <label for="start_at" class="col-md-4 control-label">Start at</label>
 
     <div class="col-md-6">
-        <input id="start_time" type="text" class="form-control" name="start_time" value="{{ $event->start_time }}" required>
+        <input id="start_at" type="text" class="form-control" name="start_at" value="{{ $event->start_at }}" required>
 
-        @if ($errors->has('start_time'))
+        @if ($errors->has('start_at'))
             <span class="help-block">
-                <strong>{{ $errors->first('start_time') }}</strong>
+                <strong>{{ $errors->first('start_at') }}</strong>
             </span>
         @endif
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('end_time') ? ' has-error' : '' }}">
-    <label for="end_time" class="col-md-4 control-label">End time</label>
+<div class="form-group{{ $errors->has('ends_at') ? ' has-error' : '' }}">
+    <label for="ends_at" class="col-md-4 control-label">Ends at</label>
 
     <div class="col-md-6">
-        <input id="end_time" type="text" class="form-control" name="end_time" value="{{ $event->end_time }}" required>
+        <input id="ends_at" type="text" class="form-control" name="ends_at" value="{{ $event->ends_at }}" required>
 
-        @if ($errors->has('end_time'))
+        @if ($errors->has('ends_at'))
             <span class="help-block">
-                <strong>{{ $errors->first('end_time') }}</strong>
+                <strong>{{ $errors->first('ends_at') }}</strong>
             </span>
         @endif
     </div>

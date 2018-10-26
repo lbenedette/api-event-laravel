@@ -8,7 +8,7 @@ class Event extends Model
 {
     protected $guarded = [];
 
-    protected $dates = ['start_time', 'end_time'];
+    protected $dates = ['start_at', 'ends_at'];
 
     /**
      * A event belongs to a creator.
@@ -69,28 +69,23 @@ class Event extends Model
     }
 
     /**
-     * Return true if the interval between $startTime and $endTime
+     * Return true if the interval between $startDateTime and $endDateTime
      * Overwrite the event duration interval
      *
-     * @param $startTime
-     * @param $endTime
+     * @param $startDateTime
+     * @param $endDateTime
      * @return bool
      */
-    public function checkOverwriteInterval($startTime, $endTime)
+    public function checkOverwriteInterval($startDateTime, $endDateTime)
     {
-        if ($startTime < $this->start_time) {
-            if ($endTime <= $this->start_time) {
-                return false;
-            }
+        if ($startDateTime->between($this->start_at, $this->ends_at)) {
             return true;
         }
 
-        if ($startTime > $this->start_time) {
-            if ($startTime >= $this->end_time) {
-                return false;
-            }
+        if ($endDateTime->between($this->start_at, $this->ends_at)) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

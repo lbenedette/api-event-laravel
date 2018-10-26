@@ -1,16 +1,20 @@
 <div class="col-md-8 col-md-offset-2">
     <div class="panel panel-default">
+        <div class="panel-heading">
+            <a class="text-primary" href="{{ '/events/' . $event->id }}">
+                {{ $event->title }}
+            </a>
+        </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-8">
-                    Description:
-                    <a href="{{ '/events/' . $event->id }}">
+                    <div class="text-justify">
                         {{ $event->description }}
-                    </a>
+                    </div>
                     <br>
-                    Start time: {{ $event->start_time }}
+                    Start time: {{ $event->start_at }}
                     <br>
-                    End Time: {{ $event->end_time }}
+                    End Time: {{ $event->ends_at }}
                 </div>
 
                 <div class="pull-right">
